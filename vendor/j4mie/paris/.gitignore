@@ -1,0 +1,6 @@
+*.swp
+*.sqlite
+docs/_build
+nbproject/
+/vendor
+/composer.lock
