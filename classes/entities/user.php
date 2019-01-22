@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * User model
+ * User active record model
  * - predifined to supply most common user operations
  *
  * @package    local_orm

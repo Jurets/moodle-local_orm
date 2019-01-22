@@ -25,9 +25,18 @@
 
 namespace local_orm;
 
+use ORM;
+use ORMWrapper;
 
+/**
+ * Class user
+ *
+ * - to change default table name use statement such below
+ *   public static $_table = 'mdl_user';
+ *
+ * @package local_orm
+ */
 class user extends model {
-
 
     /**
      * Return current user id
@@ -39,9 +48,13 @@ class user extends model {
         return $USER->id;
     }
 
-    //public static $_table = 'mdl_user';
-
-    public static function current($orm) {
+    /**
+     * Filter: current user
+     *
+     * @param ORMWrapper $orm
+     * @return ORM
+     */
+    public static function current(ORMWrapper $orm): ORM {
         return $orm->where('id', self::current_userid());
     }
 }

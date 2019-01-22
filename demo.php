@@ -1,87 +1,132 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-    // ------------------- //
-    // --- Idiorm Demo --- //
-    // ------------------- //
+/**
+ * Inherited ORM class
+ *
+ * @package    local_orm
+ * @copyright  2019 Jurets <jurets75.gmail@com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-    // Note: This is just about the simplest database-driven webapp it's possible to create
-    // and is designed only for the purpose of demonstrating how Idiorm works.
+require_once("../../config.php");
 
-    // In case it's not obvious: this is not the correct way to build web applications!
+use local_orm\base as orm;
+use local_orm\model;
+use local_orm\user;
+use local_orm\entities\course;
+use local_orm\course_module;
 
-    // Require the idiorm file
+/*$courses = course::where_gte('id', SITEID)->find_many();
 
-    require_once("../../config.php");
+$modules = orm::for_table('course')
+    ->select_many(['courseid' => 'c.id'], ['coursename' => 'c.shortname'], 'cm.*', ['modulename' => 'm.name'], ['pagename' => 'p.name'])
+    ->table_alias('c')
+    ->join('course_modules', ['c.id', '=', 'cm.course'], 'cm')
+    ->join('modules', ['cm.module', '=', 'm.id'], 'm')
+    ->join('page', ['cm.instance', '=', 'p.id'], 'p')
+    ->where_equal('c.id', 3)
+    ->where_in('m.name', ['page'])
+    ->find_many();
 
+$page = $modules[0];
+echo html_writer::div($page->coursename);
+echo html_writer::div($page->modulename . ' - ' . $page->pagename);
+echo '<br><br>';
 
-    global $CFG;
+// With associations
+$cm = course_module::where_gte('course', $page->courseid)->find_one();
+$module = $cm->module()->find_one();
+echo html_writer::div($cm->module . ' - ' . $module->name);
 
-    require_once($CFG->dirroot . "/vendor/j4mie/idiorm/idiorm.php");
+$courses = course::where_gte('id', SITEID)->find_many();
 
-    // Connect to the demo database file
-    ORM::configure('sqlite:./demo.sqlite');
+$courses = orm::for_table('course')
+    ->table_alias('c')
+    ->select('c.*')
+    ->select('cat.name', 'catname')
+    ->join('course_categories', ['c.category', '=', 'cat.id'], 'cat')
+    ->where_gte('id', SITEID)
+    ->find_many();
 
-    // This grabs the raw database connection from the ORM
-    // class and creates the table if it doesn't already exist.
-    // Wouldn't normally be needed if the table is already there.
-    $db = ORM::get_db();
-    $db->exec("
-        CREATE TABLE IF NOT EXISTS contact (
-            id INTEGER PRIMARY KEY, 
-            name TEXT, 
-            email TEXT 
-        );"
-    );
+foreach ($courses as $course) {
+    echo html_writer::div($course->shortname . ': ' . $course->startdate . ' - ' . $course->enddate);
+    echo html_writer::div($course->catname);
+}
 
-    // Handle POST submission
-    if (!empty($_POST)) {
-        
-        // Create a new contact object
-        $contact = ORM::for_table('contact')->create();
+$users = user::where('confirmed', 1)->find_many();
+foreach ($users as $user) {
+    echo html_writer::div($user->username . ': ' . $user->firstname . ' - ' . $user->email);
+}
 
-        // SHOULD BE MORE ERROR CHECKING HERE!
+$user = \local_orm\user::where_equal('username', 'john')->find_one();
 
-        // Set the properties of the object
-        $contact->name = $_POST['name'];
-        $contact->email = $_POST['email'];
+echo html_writer::div(($user ? $user->username : 'not logged'));
 
-        // Save the object to the database
-        $contact->save();
-        
-        // Redirect to self.
-        header('Location: ' . basename(__FILE__));
-        exit;
-    }
+$user = \local_orm\entities\user::select('*')->filter('current')->find_one();
+echo html_writer::div(($user ? $user->username : 'not logged'));
 
-    // Get a list of all contacts from the database
-    $count = ORM::for_table('contact')->count();
-    $contact_list = ORM::for_table('contact')->find_many();
+$record = orm::for_table('user')
+    ->table_alias('u')
+    ->select_many('u.id', 'u.username')
+    ->where_equal('id', 2)
+    ->find_one();
+echo html_writer::div(($record ? $record->username : 'not logged'));
+*/
+
 ?>
 
 <html>
     <head>
-        <title>Idiorm Demo</title>
+        <title>Moodle Idiorm & Paris Demo</title>
     </head>
 
     <body>
     
-        <h1>Idiorm Demo</h1>
-
-        <h2>Contact List (<?php echo $count; ?> contacts)</h2>
+        <h1>Moodle Idiorm & Paris Demo</h1>
+        <?php
+        // User model
+        $modeluser = user::select(['id', 'name' => 'c.username'])
+            ->table_alias('c')
+            ->find_many();
+        $modeluser = model::factory('user')->where_in('username', ['admin', 'guest']);
+        $users = $modeluser->find_many();
+        ?>
+        <h2>Use model factory method: User List of (<?php echo $modeluser->count(); ?> users)</h2>
         <ul>
-            <?php foreach ($contact_list as $contact): ?>
+            <?php foreach ($users as $user) { ?>
                 <li>
-                    <strong><?php echo $contact->name ?></strong>
-                    <a href="mailto:<?php echo $contact->email; ?>"><?php echo $contact->email; ?></a>
+                    <strong><?php echo $user->name ?></strong>
+                    <a href="mailto:<?php echo $user->email; ?>"><?php echo $user->email; ?></a>
                 </li>
-            <?php endforeach; ?>
+            <?php } ?>
         </ul>
 
-        <form method="post" action="">
+        <h2>Use model factory method: Current User</h2>
+        <?php $user = model::factory('user')
+            ->filter('current')
+            ->find_one(); ?>
+        <p><?php echo $user->username ?></p>
+
+
+        <!--<form method="post" action="">
             <h2>Add Contact</h2>
             <p><label for="name">Name:</label> <input type="text" name="name" /></p>
             <p><label for="email">Email:</label> <input type="email" name="email" /></p>
             <input type="submit" value="Create" />
-        </form>
+        </form>-->
     </body>
 </html>

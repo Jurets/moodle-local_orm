@@ -24,4 +24,4 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'IdiORM wrapper';
+$string['pluginname'] = 'Idiorm & Paris adapter';
