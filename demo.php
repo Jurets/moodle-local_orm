@@ -24,6 +24,8 @@
 
 require_once("../../config.php");
 
+require_login();
+
 use local_orm\base as orm;
 use local_orm\model;
 use local_orm\user;
@@ -33,7 +35,8 @@ use local_orm\course_module;
 /*$courses = course::where_gte('id', SITEID)->find_many();
 
 $modules = orm::for_table('course')
-    ->select_many(['courseid' => 'c.id'], ['coursename' => 'c.shortname'], 'cm.*', ['modulename' => 'm.name'], ['pagename' => 'p.name'])
+    ->select_many(['courseid' => 'c.id'], ['coursename' => 'c.shortname'], 'cm.*',
+        ['modulename' => 'm.name'], ['pagename' => 'p.name'])
     ->table_alias('c')
     ->join('course_modules', ['c.id', '=', 'cm.course'], 'cm')
     ->join('modules', ['cm.module', '=', 'm.id'], 'm')
@@ -98,35 +101,34 @@ echo html_writer::div(($record ? $record->username : 'not logged'));
     
         <h1>Moodle Idiorm & Paris Demo</h1>
         <?php
-        // User model
-        $modeluser = user::select(['id', 'name' => 'c.username'])
-            ->table_alias('c')
-            ->find_many();
-        $modeluser = model::factory('user')->where_in('username', ['admin', 'guest']);
-        $users = $modeluser->find_many();
-        ?>
-        <h2>Use model factory method: User List of (<?php echo $modeluser->count(); ?> users)</h2>
-        <ul>
-            <?php foreach ($users as $user) { ?>
-                <li>
-                    <strong><?php echo $user->name ?></strong>
-                    <a href="mailto:<?php echo $user->email; ?>"><?php echo $user->email; ?></a>
-                </li>
-            <?php } ?>
-        </ul>
+        if (!is_siteadmin()) {
+            echo 'This demo is only for site administrators! Try to re-login as site admin!';
+        } else {
+            // User model.
+            $modeluser = user::select(['id', 'name' => 'c.username'])
+                ->table_alias('c')
+                ->find_many();
+            $modeluser = model::factory('user')->where_in('username', ['admin', 'guest']);
+            $users = $modeluser->find_many();
+            ?>
+            <h2>Use model factory method: User List of (<?php echo $modeluser->count(); ?> users)</h2>
+            <ul>
+                <?php foreach ($users as $user) { ?>
+                    <li>
+                        <strong><?php echo $user->name ?></strong>
+                        <a href="mailto:<?php echo $user->email; ?>"><?php echo $user->email; ?></a>
+                    </li>
+                <?php } ?>
+            </ul>
 
-        <h2>Use model factory method: Current User</h2>
-        <?php $user = model::factory('user')
-            ->filter('current')
-            ->find_one(); ?>
-        <p><?php echo $user->username ?></p>
+            <h2>Use model factory method: Current User</h2>
+            <?php $user = model::factory('user')->filter('current')->find_one();?>
+            <p><?php
+            if ($user) {
+                echo $user->username;
+            }
+            ?></p>
 
-
-        <!--<form method="post" action="">
-            <h2>Add Contact</h2>
-            <p><label for="name">Name:</label> <input type="text" name="name" /></p>
-            <p><label for="email">Email:</label> <input type="email" name="email" /></p>
-            <input type="submit" value="Create" />
-        </form>-->
+        <?php } ?>
     </body>
 </html>

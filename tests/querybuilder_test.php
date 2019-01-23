@@ -24,15 +24,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_orm\base as orm;
+
 /**
  * Class querybuilder_test
  * @package    local_orm
  * @copyright  2019 Sebale
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-use local_orm\base as orm;
-
 class local_orm_querybuilder_testcase extends basic_testcase {
 
     /**

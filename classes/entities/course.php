@@ -24,7 +24,15 @@
 
 namespace local_orm\entities;
 
+defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Course active record model
+ *
+ * @package    local_orm
+ * @copyright  2018 Jurets
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class course extends armodel {
-
+    // Place some code here
 }

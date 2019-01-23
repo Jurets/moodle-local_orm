@@ -24,13 +24,26 @@
 
 namespace local_orm;
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Course module model
+ *
+ * @package    local_orm
+ * @copyright  2018 Jurets
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class course_module extends model {
 
     public static $_table = 'course_modules';
 
+    /**
+     * Related module type
+     *
+     * @return $this|null
+     */
     public function module() {
         return $this->belongs_to('modules', 'module', 'id');
-        //return $this->has_one('modules', '');
     }
 
 }

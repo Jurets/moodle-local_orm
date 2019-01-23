@@ -23,8 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 // Code below is needed to adapt ancestors of oldscholl class PHPUnit_Framework_TestCase
-require_once dirname(__FILE__) . '/vendor/j4mie/idiorm/test/PHPUnit_Framework_TestCase.php';
+require_once(dirname(__FILE__) . '/vendor/j4mie/idiorm/test/PHPUnit_Framework_TestCase.php');
 
 // Include original paris bootstrap file
-require_once dirname(__FILE__) . '/vendor/j4mie/paris/test/bootstrap.php';
+require_once(dirname(__FILE__) . '/vendor/j4mie/paris/test/bootstrap.php');

@@ -26,6 +26,8 @@ namespace local_orm;
 
 use ORM;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once('bootstrap_trait.php');
 
 /**
@@ -40,16 +42,23 @@ class base extends ORM {
     // Use base trait to avoid code duplication
     use bootstrap_trait;
 
-    public static function for_table($table_name, $connection_name = self::DEFAULT_CONNECTION) {
-        self::_setup_db($connection_name);
-        return new self(self::table_prefix($table_name), array(), $connection_name);
+    /**
+     * Overrided
+     *
+     * @param string $tablename
+     * @param string $connectionname
+     * @return base
+     */
+    public static function for_table($tablename, $connectionname = self::DEFAULT_CONNECTION) {
+        self::_setup_db($connectionname);
+        return new self(self::table_prefix($tablename), array(), $connectionname);
     }
 
     /**
-     * Add a simple JOIN source to the query
+     * Add a simple JOIN source to the query. Overrided
      */
-    public function join($table, $constraint, $table_alias=null) {
-        return $this->_add_join_source("", self::table_prefix($table), $constraint, $table_alias);
+    public function join($table, $constraint, $tablealias=null) {
+        return $this->_add_join_source("", self::table_prefix($table), $constraint, $tablealias);
     }
 
 }

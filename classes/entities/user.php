@@ -25,9 +25,16 @@
 
 namespace local_orm\entities;
 
+defined('MOODLE_INTERNAL') || die();
 
+/**
+ * User active record model
+ *
+ * @package    local_orm
+ * @copyright  2019 Jurets <jurets75.gmail@com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class user extends armodel {
-
 
     /**
      * Return current user id
@@ -39,13 +46,14 @@ class user extends armodel {
         return $USER->id;
     }
 
-    //public static $_table = 'mdl_user';
-
+    /**
+     * Filter: current user
+     *
+     * @param $orm
+     * @return mixed
+     */
     public static function current($orm) {
         return $orm->where('id', self::current_userid());
     }
 
-    public function profile() {
-        return $this->has_one('profile');
-    }
 }

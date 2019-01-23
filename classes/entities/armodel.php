@@ -25,8 +25,9 @@
 
 namespace local_orm\entities;
 
-use \local_orm\model;
+defined('MOODLE_INTERNAL') || die();
 
+use \local_orm\model;
 
 /**
  * Abstract class model
@@ -36,7 +37,7 @@ use \local_orm\model;
  */
 abstract class armodel extends model {
 
-    // Use this model to extend base model functionality
-    // e.g. validation, relation, etc
+    // Use this model to extend base model functionality,
+    // Such as validation, relation, etc.
 
 }

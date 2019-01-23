@@ -18,7 +18,7 @@
  * Version details
  *
  * @package    local_orm
- * @copyright  2018 Jurets
+ * @copyright  2019 Jurets
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -28,6 +28,8 @@ namespace local_orm;
 use ORMWrapper as wrapper;
 use Model as ModelParis;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once('bootstrap_trait.php');
 
 /**
@@ -48,7 +50,7 @@ abstract class model extends ModelParis {
      * @return mixed
      */
     public static function __callStatic($method, $parameters) {
-        if(function_exists('get_called_class')) {
+        if (function_exists('get_called_class')) {
             $model = static::factory(get_called_class());
             return call_user_func_array(array($model, $method), $parameters);
         }
@@ -57,91 +59,89 @@ abstract class model extends ModelParis {
     /**
      * Overrided
      *
-     * @param string $class_name
-     * @param null $connection_name
+     * @param string $classname
+     * @param null $connectionname
      * @return wrapper
      */
-    public static function factory($class_name, $connection_name = null) {
-        $table_name = static::_get_table_name($class_name);
+    public static function factory($classname, $connectionname = null) {
+        $tablename = static::_get_table_name($classname);
 
-        $parsed = explode('\\', $class_name);
+        $parsed = explode('\\', $classname);
         if (count($parsed) == 1) {
-            //$class_name = '\local_orm\\' . $class_name;
             $namespace = $parsed = explode('\\', get_called_class());
             array_pop($namespace);
             $namespace = implode('\\', $namespace);
-            $class_name = "\\$namespace\\$class_name";
+            $classname = "\\$namespace\\$classname";
         }
-        //$class_name = static::$auto_prefix_models . $class_name;
 
-        if ($connection_name == null) {
-            $connection_name = static::_get_static_property(
-                $class_name,
+        if ($connectionname == null) {
+            $connectionname = static::_get_static_property(
+                $classname,
                 '_connection_name',
                 wrapper::DEFAULT_CONNECTION
             );
         }
-        $table_name = static::table_prefix($table_name);
-        $wrapper = wrapper::for_table($table_name, $connection_name);
-        $wrapper->set_class_name($class_name);
-        $wrapper->use_id_column(static::_get_id_column_name($class_name));
+        $tablename = static::table_prefix($tablename);
+        $wrapper = wrapper::for_table($tablename, $connectionname);
+        $wrapper->set_class_name($classname);
+        $wrapper->use_id_column(static::_get_id_column_name($classname));
         return $wrapper;
     }
 
     /**
      * Overrided
      *
-     * @param  string      $associated_class_name
-     * @param  null|string $foreign_key_name
-     * @param  null|string $foreign_key_name_in_current_models_table
-     * @param  null|string $connection_name
+     * @param  string $associatedclassname
+     * @param  null|string $foreignkeyname
+     * @param  null|string $foreignkeynameincurrentmodelstable
+     * @param  null|string $connectionname
      * @return ORMWrapper
      */
-    protected function _has_one_or_many($associated_class_name, $foreign_key_name=null, $foreign_key_name_in_current_models_table=null, $connection_name=null) {
-        $base_table_name = self::_get_table_name(get_class($this));
-        $foreign_key_name = self::_build_foreign_key_name($foreign_key_name, $base_table_name);
+    protected function _has_one_or_many($associatedclassname, $foreignkeyname = null, $foreignkeynameincurrentmodelstable = null, $connectionname = null) {
+        $basetablename = self::_get_table_name(get_class($this));
+        $foreignkeyname = self::_build_foreign_key_name($foreignkeyname, $basetablename);
 
-        $where_value = ''; //Value of foreign_table.{$foreign_key_name} we're
-        //looking for. Where foreign_table is the actual
-        //database table in the associated model.
+        $wherevalue = ''; // Value of foreign_table.{$foreign_key_name} we're
+        // looking for. Where foreign_table is the actual
+        // database table in the associated model.
 
-        if(is_null($foreign_key_name_in_current_models_table)) {
-            //Match foreign_table.{$foreign_key_name} with the value of
-            //{$this->_table}.{$this->id()}
-            $where_value = $this->id();
+        if (is_null($foreignkeynameincurrentmodelstable)) {
+            // Match foreign_table.{$foreign_key_name} with the value of
+            // {$this->_table}.{$this->id()}
+            $wherevalue = $this->id();
         } else {
-            //Match foreign_table.{$foreign_key_name} with the value of
-            //{$this->_table}.{$foreign_key_name_in_current_models_table}
-            $where_value = $this->$foreign_key_name_in_current_models_table;
+            // Match foreign_table.{$foreign_key_name} with the value of
+            // {$this->_table}.{$foreign_key_name_in_current_models_table}
+            $wherevalue = $this->$foreignkeynameincurrentmodelstable;
         }
-        return static::factory($associated_class_name, $connection_name)->where($foreign_key_name, $where_value);
+        return static::factory($associatedclassname, $connectionname)->where($foreignkeyname, $wherevalue);
     }
 
     /**
      * Overrided
      *
-     * @param  string      $associated_class_name
-     * @param  null|string $foreign_key_name
-     * @param  null|string $foreign_key_name_in_associated_models_table
-     * @param  null|string $connection_name
+     * @param  string      $associatedclassname
+     * @param  null|string $foreignkeyname
+     * @param  null|string $foreignkeynameinassociatedmodelstable
+     * @param  null|string $connectionname
      * @return $this|null
      */
-    protected function belongs_to($associated_class_name, $foreign_key_name=null, $foreign_key_name_in_associated_models_table=null, $connection_name=null) {
-        $associated_table_name = self::_get_table_name(self::$auto_prefix_models . $associated_class_name);
-        $foreign_key_name = self::_build_foreign_key_name($foreign_key_name, $associated_table_name);
-        $associated_object_id = $this->$foreign_key_name;
+    protected function belongs_to($associatedclassname, $foreignkeyname = null, $foreignkeynameinassociatedmodelstable = null, $connectionname = null) {
+        $associatedtablename = self::_get_table_name(self::$auto_prefix_models . $associatedclassname);
+        $foreignkeyname = self::_build_foreign_key_name($foreignkeyname, $associatedtablename);
+        $associatedobjectid = $this->$foreignkeyname;
 
-        $desired_record = null;
-        if( is_null($foreign_key_name_in_associated_models_table) ) {
-            //"{$associated_table_name}.primary_key = {$associated_object_id}"
-            //NOTE: primary_key is a placeholder for the actual primary key column's name
-            //in $associated_table_name
-            $desired_record = static::factory($associated_class_name, $connection_name)->where_id_is($associated_object_id);
+        $desiredrecord = null;
+        if (is_null($foreignkeynameinassociatedmodelstable) ) {
+            // "{$associated_table_name}.primary_key = {$associated_object_id}"
+            // NOTE: primary_key is a placeholder for the actual primary key column's name
+            // in $associated_table_name
+            $desiredrecord = static::factory($associatedclassname, $connectionname)->where_id_is($associatedobjectid);
         } else {
-            //"{$associated_table_name}.{$foreign_key_name_in_associated_models_table} = {$associated_object_id}"
-            $desired_record = static::factory($associated_class_name, $connection_name)->where($foreign_key_name_in_associated_models_table, $associated_object_id);
+            // " {$associated_table_name}.{$foreign_key_name_in_associated_models_table} = {$associated_object_id}"
+            $desiredrecord = static::factory($associatedclassname, $connectionname)->where($foreignkeynameinassociatedmodelstable, $associatedobjectid);
         }
-        return $desired_record;
+        return $desiredrecord;
     }
 
 }

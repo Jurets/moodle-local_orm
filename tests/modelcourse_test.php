@@ -24,15 +24,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_orm\base as orm;
+
 /**
  * Class querybuilder_test
  * @package    local_orm
  * @copyright  2019 Sebale
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-use local_orm\base as orm;
-
 class local_orm_modelcourse_testcase extends advanced_testcase {
 
     const COURSE_SHORTNAME = 'TestCourse';
@@ -58,7 +57,7 @@ class local_orm_modelcourse_testcase extends advanced_testcase {
         $this->preventResetByRollback();
 
         $this->generator = $this->getDataGenerator();
-        $this->user = $this->generator->create_user(['email'=>'learner@example.com', 'username'=>'learner']);
+        $this->user = $this->generator->create_user(['email' => 'learner@example.com', 'username' => 'learner']);
 
         $this->course = $this->generator->create_course([
             'shortname' => self::COURSE_SHORTNAME,

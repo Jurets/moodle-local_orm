@@ -24,8 +24,22 @@
 
 namespace local_orm;
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Course model
+ *
+ * @package    local_orm
+ * @copyright  2018 Jurets
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class course extends model {
 
+    /**
+     * Related modules
+     *
+     * @return \ORMWrapper
+     */
     public function modules() {
         return $this->has_many('course_module');
     }

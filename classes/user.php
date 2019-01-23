@@ -28,6 +28,8 @@ namespace local_orm;
 use ORM;
 use ORMWrapper;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Class user
  *

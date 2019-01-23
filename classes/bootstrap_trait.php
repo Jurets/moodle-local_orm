@@ -36,9 +36,8 @@ require_once($CFG->dirroot . "/local/orm/vendor/j4mie/paris/paris.php");
 $configstr = 'mysql:host=' . $CFG->dbhost . ';dbname=' . $CFG->dbname;
 ORM::configure($configstr);
 ORM::configure('username', $CFG->dbuser);
-ORM::configure('password', $CFG->dbpass); //$db = ORM::get_db();
+ORM::configure('password', $CFG->dbpass);
 
-//ModelParis::$auto_prefix_models = $CFG->prefix;
 ModelParis::$short_table_names = true;
 
 /**
@@ -53,17 +52,17 @@ trait bootstrap_trait {
     /**
      * Concat table prefix, from moodle db config
      *
-     * @param string $table_name
+     * @param string $tablename
      * @return string
      */
-    protected static function table_prefix(string $table_name): string {
+    protected static function table_prefix(string $tablename): string {
         global $CFG;
         if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
             $prefix = $CFG->phpunit_prefix;
         } else {
             $prefix = $CFG->prefix;
         }
-        return $prefix . $table_name;
+        return $prefix . $tablename;
     }
 
 }

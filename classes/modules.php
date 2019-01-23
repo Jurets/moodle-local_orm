@@ -24,6 +24,15 @@
 
 namespace local_orm;
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Modules model
+ *
+ * @package    local_orm
+ * @copyright  2018 Jurets
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class modules extends model {
 
 }
