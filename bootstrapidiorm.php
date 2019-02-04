@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Code below is needed to adapt ancestors of oldscholl class PHPUnit_Framework_TestCase
+// Code below is needed to adapt ancestors of oldscholl class PHPUnit_Framework_TestCase!
 require_once(dirname(__FILE__) . '/vendor/j4mie/idiorm/test/PHPUnit_Framework_TestCase.php');
 
-// Include original idiorm bootstrap file
+// Include original idiorm bootstrap file.
 require_once(dirname(__FILE__) . '/vendor/j4mie/idiorm/test/bootstrap.php');

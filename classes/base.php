@@ -39,7 +39,7 @@ require_once('bootstrap_trait.php');
  */
 class base extends ORM {
 
-    // Use base trait to avoid code duplication
+    // Use base trait to avoid code duplication!
     use bootstrap_trait;
 
     /**

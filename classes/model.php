@@ -97,21 +97,20 @@ abstract class model extends ModelParis {
      * @param  null|string $connectionname
      * @return ORMWrapper
      */
-    protected function _has_one_or_many($associatedclassname, $foreignkeyname = null, $foreignkeynameincurrentmodelstable = null, $connectionname = null) {
+    protected function _has_one_or_many($associatedclassname, $foreignkeyname = null,
+                                        $foreignkeynameincurrentmodelstable = null, $connectionname = null) {
         $basetablename = self::_get_table_name(get_class($this));
         $foreignkeyname = self::_build_foreign_key_name($foreignkeyname, $basetablename);
 
-        $wherevalue = ''; // Value of foreign_table.{$foreign_key_name} we're
-        // looking for. Where foreign_table is the actual
-        // database table in the associated model.
+        $wherevalue = ''; // Value of foreign_table.{$foreign_key_name} we're looking for.
+        // Where foreign_table is the actual database table in the associated model.
 
         if (is_null($foreignkeynameincurrentmodelstable)) {
-            // Match foreign_table.{$foreign_key_name} with the value of
-            // {$this->_table}.{$this->id()}
+            // Match foreign_table.{$foreign_key_name} with the value of {$this->_table}.{$this->id()} .
             $wherevalue = $this->id();
         } else {
-            // Match foreign_table.{$foreign_key_name} with the value of
-            // {$this->_table}.{$foreign_key_name_in_current_models_table}
+            // Match foreign_table.{$foreign_key_name} with
+            // the value of {$this->_table}.{$foreign_key_name_in_current_models_table} .
             $wherevalue = $this->$foreignkeynameincurrentmodelstable;
         }
         return static::factory($associatedclassname, $connectionname)->where($foreignkeyname, $wherevalue);
@@ -126,20 +125,21 @@ abstract class model extends ModelParis {
      * @param  null|string $connectionname
      * @return $this|null
      */
-    protected function belongs_to($associatedclassname, $foreignkeyname = null, $foreignkeynameinassociatedmodelstable = null, $connectionname = null) {
+    protected function belongs_to($associatedclassname, $foreignkeyname = null,
+                                  $foreignkeynameinassociatedmodelstable = null, $connectionname = null) {
         $associatedtablename = self::_get_table_name(self::$auto_prefix_models . $associatedclassname);
         $foreignkeyname = self::_build_foreign_key_name($foreignkeyname, $associatedtablename);
         $associatedobjectid = $this->$foreignkeyname;
 
         $desiredrecord = null;
         if (is_null($foreignkeynameinassociatedmodelstable) ) {
-            // "{$associated_table_name}.primary_key = {$associated_object_id}"
-            // NOTE: primary_key is a placeholder for the actual primary key column's name
-            // in $associated_table_name
+            // E.g. "{$associated_table_name}.primary_key = {$associated_object_id}".
+            // NOTE: primary_key is a placeholder for the actual primary key column's name in $associated_table_name.
             $desiredrecord = static::factory($associatedclassname, $connectionname)->where_id_is($associatedobjectid);
         } else {
-            // " {$associated_table_name}.{$foreign_key_name_in_associated_models_table} = {$associated_object_id}"
-            $desiredrecord = static::factory($associatedclassname, $connectionname)->where($foreignkeynameinassociatedmodelstable, $associatedobjectid);
+            // E.g. " {$associated_table_name}.{$foreign_key_name_in_associated_models_table} = {$associated_object_id}".
+            $desiredrecord = static::factory($associatedclassname, $connectionname)
+                ->where($foreignkeynameinassociatedmodelstable, $associatedobjectid);
         }
         return $desiredrecord;
     }

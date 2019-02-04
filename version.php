@@ -24,6 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_orm'; // Full name of the plugin (used for diagnostics)
-$plugin->version = 2018122800;    // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires = 2018051702;   // Requires this Moodle version (2018081700)
+$plugin->component = 'local_orm'; // Full name of the plugin (used for diagnostics).
+$plugin->version = 2018122800;    // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires = 2018051702;   // Requires this Moodle version.
