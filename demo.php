@@ -29,7 +29,7 @@ require_login();
 use local_orm\base as orm;
 use local_orm\model;
 use local_orm\user;
-use local_orm\entities\course;
+use local_orm\course;
 use local_orm\course_module;
 
 /*$courses = course::where_gte('id', SITEID)->find_many();
